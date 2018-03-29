@@ -159,8 +159,8 @@
   });
 
   peer.on('error', function(err) {
+    console.log(err);
     alert("Oops! User is offline!");
-    $('#second-video').hide();
     // Return to step 2 if error occurs
     step2();
   });
