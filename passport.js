@@ -42,7 +42,7 @@ passport.use(
     {
       clientID: "559262561112606",
       clientSecret: "45ede220e9fc566eda67005eb55a05a7",
-      callbackURL: "http://localhost:3000/auth/facebook/callback",
+      callbackURL: "https://afternoon-plains-82268.herokuapp.com/auth/facebook/callback",
       profileFields: ["id", "displayName", "email"]
     },
     function(token, refreshToken, profile, done) {
