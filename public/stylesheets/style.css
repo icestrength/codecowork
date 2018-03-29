@@ -1,0 +1,52 @@
+body {
+  min-height: 2000px;
+  padding-top:70px;
+  background-image: url(../images/cork-wallet.png);
+  background-position: left bottom;
+  background-repeat:repeat;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+*, *:before, *after {
+  -moz-box.sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+#my-video {
+  margin-top: 15px;
+  width: 280px;
+  height: auto;
+  background-color: #eee;
+}
+
+#second-video {
+  margin-top: 15px;
+  width: 280px;
+  height: auto;
+  background-color: #eee;
+}
+
+#video-container {
+  text-align: center;
+}
+
+#step1-error, #step2, #step3 {
+  display: none;
+}
+
+#my-id {
+  font-weight: bold;
+}
+
+.thumbnail {
+  border: 4px double black;
+  background-image: url(../images/cork-wallet.png);
+  background-position: left bottom;
+  background-repeat:repeat;
+}

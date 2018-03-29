@@ -1,0 +1,241 @@
+<div>
+  <div class="row">
+    <div class="col-md-8">
+      <textarea id="code-screen" rows="150">{{content.content}}</textarea>
+    </div>
+    <div class="col-md-4">
+      <ul class="nav nav-tabs">
+        <li class="active">
+          <a href="#panel1" data-toggle="tab">Users</a>
+        </li>
+        <li>
+          <a href="#panel2" data-toggle="tab">Chat</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="panel1">
+          <div class="panel panel-primary">
+            <ul class="list-group" id="userList">
+              <li class="list-group-item">
+                {{content.owner.name}}
+                <button class="btn btn-sm btn-success callUser" data-call-id="{{content.owner.name}}{{@root.content._id}}">Call</button>
+              </li>
+              {{#each content.sharedTo}}
+                <li class="list-group-item">
+                  {{this.name}}
+                  <button class="btn btn-sm btn-success callUser" data-call-id="{{this.name}}{{@root.content._id}}">Call</button>
+                </li>
+              {{/each}}
+            </ul>
+            <div id="video-container">
+              <video autoplay id="second-video"></video>
+              <video autoplay id="my-video" muted="true"></video>
+              <div id="step3">
+                <p>
+                  <a href="#" class="btn btn-sm btn-danger" id="end-call">End Call</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="panel2">
+          <div id="chatbox">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                CHAT ROOM
+                {{#if user}}
+                  <div class="pull-right" id="chatbox-username">{{user.name}}</div>
+                {{/if}}
+              </div>
+              <div class="panel-body">
+                <ul class="media-list" style="height:300px; overflow-y: scroll;" id="chatbox-listMessages"></ul>
+              </div>
+              <div class="panel-footer">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Enter message" id="userMessage" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-primary" onclick="sendMessage()">Send</button>
+                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<input type="hidden" value="{{roomId}}" id="roomId" />
+<input type="hidden" value="{{user.name}}" id="username" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.35.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.35.0/mode/javascript/javascript.min.js"></script>
+<script src="/plugins/ot/ot.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://rocky-depth-74216.herokuapp.com/peer/peer.js"></script>
+<script>
+  var EditorClient = ot.EditorClient;
+  var SocketIOAdapter = ot.SocketIOAdapter;
+  var CodeMirrorAdapter = ot.CodeMirrorAdapter;
+  var socket = io.connect();
+  var editor = CodeMirror.fromTextArea(document.getElementById("code-screen"), {
+    lineNumbers: true,
+    theme: "monokai"
+  });
+  editor.setSize(null, 1000);
+
+  var code = $('#code-screen').val();
+  var cmClient;
+
+  function init(str, revision, clients, serverAdapter) {
+    if (!code) {
+      editor.setValue(str);
+    }
+    cmClient = window.cmClient = new EditorClient(
+      revision, clients, serverAdapter, new CodeMirrorAdapter(editor)
+    );
+  };
+
+  socket.on('doc', function(obj) {
+    init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket))
+  });
+
+  var userMessage = function(name, text) {
+    return ('<li class="media"><div class="media-body"><div class="media">' +
+      '<div class="media-body"' +
+      '<b>' + name + '</b> : ' + text +
+      '<hr /></div></div></div></li>'
+    );
+  }
+
+  var roomId = $('#roomId').val();
+  var username = $("#username").val();
+  socket.emit('joinRoom', {
+    room: roomId,
+    username: username
+  });
+
+  var sendMessage = function() {
+    var userMessage = $('#userMessage').val();
+    socket.emit('chatMessage', {
+      message: userMessage,
+      username: username
+    });
+    $('#userMessage').val('');
+  };
+
+  socket.on('chatMessage', function(data) {
+    $('#chatbox-listMessages').append(userMessage(data.username, data.message));
+  });
+
+  //PeerJs
+  // Compatibility shim
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+  // PeerJS object
+  var peer = new Peer(username + roomId, {
+    host: 'rocky-depths-74216.herokuapp.com',
+    path: '/peerjs',
+    port: 443,
+    secure: true,
+    key: 'codecowork',
+    debug: true
+  });
+  peer.on('open', function() {
+    $('#my-id').text(peer.id);
+    $('#second-video').hide();
+  });
+
+  // Receiving a call
+  peer.on('call', function(call) {
+    var ask = confirm("Confirm a call?");
+    if (ask == true) {
+      call.answer(window.localStream);
+      $('#second-video').show();
+      step3(call);
+    }
+  });
+
+  peer.on('error', function(err) {
+    alert("Oops! User is offline!");
+    $('#second-video').hide();
+    // Return to step 2 if error occurs
+    step2();
+  });
+
+  $(document).on("click", ".callUser", function() {
+    if (window.existingCall) {
+      window.existingCall.close();
+    }
+    var callId = $(this).data('call-id');
+    if (callId.indexOf(username) === -1) {
+      var call = peer.call(callId, window.localStream);
+      $('#second-video').show();
+      step3(call);
+    }
+  });
+
+  // Click handlers setup
+  $(function() {
+    $('#make-call').click(function() {
+      // Initiate a call!
+      var call = peer.call($('#callto-id').val(), window.localStream);
+      step3(call);
+    });
+
+    $('#end-call').click(function() {
+      window.existingCall.close();
+      $('#second-video').hide();
+      step2();
+    });
+
+    // Retry if getUserMedia fails
+    $('#step1-retry').click(function() {
+      $('#step1-error').hide();
+      step1();
+    });
+    // Get things started
+    step1();
+  });
+
+  function step1() {
+    // Get audio/video stream
+    navigator.getUserMedia({
+      audio: true,
+      video: true
+    }, function(stream) {
+      // Set your video displays
+      $('#my-video').prop('src', URL.createObjectURL(stream));
+      window.localStream = stream;
+      step2();
+    }, function() {
+      $('#step1-error').show();
+    });
+  }
+
+  function step2() {
+    $('#step1, #step3').hide();
+    $('#step2').show();
+  }
+
+  function step3(call) {
+    // Hang up on an existing call if present
+    if (window.existingCall) {
+      window.existingCall.close();
+    }
+
+    // Wait for stream on the call, then set peer video display
+    call.on('stream', function(stream) {
+      $('#second-video').prop('src', URL.createObjectURL(stream));
+    });
+
+    // UI stuff
+    window.existingCall = call;
+    $('#second-id').text(call.peer);
+    call.on('close', step2);
+    $('#step1, #step2').hide();
+    $('#step3').show();
+  }
+</script>

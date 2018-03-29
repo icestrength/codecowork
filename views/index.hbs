@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row grid">
+    {{#if user}}
+      {{#each userTasks}}
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 card grid-item">
+          <div class="thumbnail">
+            <div class="caption">
+              <h3 id="thumbnail-label">{{this.title}}</h3>
+              <p>Owner:{{this.owner.name}}</p>
+              <p>Owner Email:{{this.owner.email}}</p>
+            </div>
+            <div class="caption card-footer">
+              <ul class="list-inline">
+                <li>
+                  <button type="button" class="open-ShareTask btn btn-info btn-md" data-task-id="{{this._id}}" data-toggle="modal" data-target="#modalWindow">Share</button>
+                  <a href="/task/{{this._id}}" class="btn btn-info btn-md">View</a>
+                  {{#ifCond @root.user.email '==' this.owner.email}}
+                    <a href="/remove/{{this._id}}" class="btn btn-danger btn-md">Remove</a>
+                  {{/ifCond}}
+                  <a href="/download/{{this._id}}" class="btn btn-success btn-md">Export</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    {{/if}}
+  </div>
+  <div class="modal fade" id="modalWindow" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Share this task to others</h4>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="shareTask">
+            <input type="hidden" id="taskId" name="taskId" />
+            <p>Person Email: <input name="email" type="email" /></p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-info">Share Task</button>
+          </form>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
