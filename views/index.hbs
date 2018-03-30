@@ -13,10 +13,16 @@
               <ul class="list-inline">
                 <li>
                   <button type="button" class="open-ShareTask btn btn-info btn-md" data-task-id="{{this._id}}" data-toggle="modal" data-target="#modalWindow"><i class="fas fa-share-square"></i> Share</button>
+                </li>
+                <li>
                   <a href="/task/{{this._id}}" class="btn btn-info btn-md"><i class="fas fa-eye"></i> View</a>
+                </li>
+                <li>
                   {{#ifCond @root.user.email '==' this.owner.email}}
                     <a href="/remove/{{this._id}}" class="btn btn-danger btn-md"><i class="fas fa-trash-alt"></i> Remove</a>
                   {{/ifCond}}
+                </li>
+                <li>
                   <a href="/download/{{this._id}}" class="btn btn-success btn-md"><i class="fas fa-download"></i> Export</a>
                 </li>
               </ul>
