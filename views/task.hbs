@@ -106,9 +106,7 @@
     socket.emit("ping");
   }, 1000);
 
-  socket.on('ping', function(obj) {
-    console.log("ping" + obj);
-  });
+
 
   var userMessage = function(name, text) {
     return ('<li class="media"><div class="media-body"><div class="media">' +
