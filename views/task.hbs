@@ -106,6 +106,10 @@
     socket.emit("ping");
   }, 1000);
 
+  socket.on('ping', function(obj) {
+    console.log("ping" + obj);
+  });
+
   var userMessage = function(name, text) {
     return ('<li class="media"><div class="media-body"><div class="media">' +
       '<div class="media-body"' +
@@ -199,7 +203,6 @@
     $('#make-call').click(function() {
       // Initiate a call!
       var call = peer.call($('#callto-id').val(), window.localStream);
-      pingHeroku();
       step3(call);
     });
 

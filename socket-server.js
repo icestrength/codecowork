@@ -36,7 +36,9 @@ module.exports = function(server) {
       socket.room = data.room;
       socket.join(data.room);
     });
-
+    setInterval(() => {
+      io.in(socket.room).emit("ping", "ping");
+    }, 20000);
     socket.on("chatMessage", function(data) {
       io.to(socket.room).emit("chatMessage", data);
     });
