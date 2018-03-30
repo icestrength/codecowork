@@ -149,7 +149,7 @@
   });
 
   function pingHeroku() {
-    peerConnection.socket.send({
+    peer.socket.send({
       type: 'ping'
     });
     timeoutID = setTimeout(pingHeroku, 20000);
