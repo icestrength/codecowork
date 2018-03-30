@@ -12,14 +12,15 @@
             <div class="caption card-footer">
               <ul class="list-inline">
                 <li>
-                  <button type="button" class="open-ShareTask btn btn-info btn-md" data-task-id="{{this._id}}" data-toggle="modal" data-target="#modalWindow">Share</button>
+                  <button type="button" class="open-ShareTask btn btn-info btn-md" data-task-id="{{this._id}}" data-toggle="modal" data-target="#modalWindow"><i class="fas fa-share-square"></i>Share</button>
                   <a href="/task/{{this._id}}" class="btn btn-info btn-md">View</a>
                   {{#ifCond @root.user.email '==' this.owner.email}}
                     <a href="/remove/{{this._id}}" class="btn btn-danger btn-md">Remove</a>
                   {{/ifCond}}
-                  <a href="/download/{{this._id}}" class="btn btn-success btn-md">Export</a>
+                  <a href="/download/{{this._id}}" class="btn btn-success btn-md"><i class="fas fa-download"></i>Export</a>
                 </li>
               </ul>
+              <i class="fas fa-user">{{this.sharedTo.length}}</i>
             </div>
           </div>
         </div>
