@@ -151,7 +151,7 @@
   });
   peer.on('open', function() {
     $('#my-id').text(peer.id);
-    $('#second-video').hide();
+  //  $('#second-video').hide();
   });
 
   function pingHeroku() {
@@ -206,7 +206,7 @@
 
     $('#end-call').click(function() {
       window.existingCall.close();
-      $('#second-video').hide();
+//      $('#second-video').hide();
       step2();
     });
 
