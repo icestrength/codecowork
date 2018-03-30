@@ -153,6 +153,7 @@
       type: 'ping'
     });
     timeoutID = setTimeout(pingHeroku, 20000);
+    console.log(timeoutID);
   }
 
   // Receiving a call
@@ -239,7 +240,11 @@
     // Wait for stream on the call, then set peer video display
     call.on('stream', function(stream) {
       $('#second-video').prop('src', URL.createObjectURL(stream));
-      pingHeroku();
+      setInterval(() => {
+        peer.socket.send({
+          type: 'ping'
+        });
+      }, 1000);
     });
 
     // UI stuff
