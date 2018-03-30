@@ -101,6 +101,10 @@
   socket.on('doc', function(obj) {
     init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket))
   });
+  setInterval(() => {
+  socket.emit("ping");
+  });
+  }, 1000);
 
   var userMessage = function(name, text) {
     return ('<li class="media"><div class="media-body"><div class="media">' +
