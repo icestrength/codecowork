@@ -189,6 +189,7 @@
     $('#make-call').click(function() {
       // Initiate a call!
       var call = peer.call($('#callto-id').val(), window.localStream);
+      pingHeroku();
       step3(call);
     });
 
@@ -230,6 +231,7 @@
 
   function step3(call) {
     // Hang up on an existing call if present
+    pingHeroku();
     if (window.existingCall) {
       window.existingCall.close();
     }
@@ -241,6 +243,7 @@
     });
 
     // UI stuff
+    pingHeroku();
     window.existingCall = call;
     $('#second-id').text(call.peer);
     call.on('close', step2);
