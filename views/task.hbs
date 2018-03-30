@@ -101,9 +101,9 @@
   socket.on('doc', function(obj) {
     init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket))
   });
+
   setInterval(() => {
-  socket.emit("ping");
-  });
+    socket.emit("ping");
   }, 1000);
 
   var userMessage = function(name, text) {
