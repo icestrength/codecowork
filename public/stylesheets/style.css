@@ -51,6 +51,6 @@ body {
   background-repeat:repeat;
 }
 
-ul li {
+.card-controls li {
   margin: 10px;
 }
