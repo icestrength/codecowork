@@ -50,3 +50,7 @@ body {
   background-position: left bottom;
   background-repeat:repeat;
 }
+
+ul li {
+  margin: 10px;
+}
