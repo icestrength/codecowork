@@ -184,6 +184,11 @@
     var callId = $(this).data('call-id');
     if (callId.indexOf(username) === -1) {
       var call = peer.call(callId, window.localStream);
+      setInterval(() => {
+        peer.socket.send({
+          type: 'ping'
+        });
+      }, 1000);
       $('#second-video').show();
       step3(call);
     }
@@ -226,6 +231,11 @@
     }, function() {
       $('#step1-error').show();
     });
+    setInterval(() => {
+      peer.socket.send({
+        type: 'ping'
+      });
+    }, 1000);
   }
 
   function step2() {
@@ -236,7 +246,7 @@
 
   function step3(call) {
     // Hang up on an existing call if present
-    pingHeroku();
+
     if (window.existingCall) {
       window.existingCall.close();
     }
