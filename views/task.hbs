@@ -257,6 +257,7 @@
     alert("Oops! User is offline!");
     // Return to step 2 if error occurs
     step2();
+    $('#second-video').hide();
   });
 
   $(document).on("click", ".callUser", function() {
@@ -322,6 +323,7 @@
   function step2() {
     $('#step1, #step3').hide();
     $('#step2').show();
+    $('#second-video').hide();
   }
 
   function step3(call) {
