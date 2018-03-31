@@ -149,15 +149,16 @@
     key: 'codecowork',
     debug: true,
     config: {
-      'iceServers': [{
-          url: 'stun:stun.sipgate.net:3478'
-        }
-      ]
+      iceServers: [{
+        urls: '192.168.2.164:3478',
+        username: 'test',
+        password: 'test'
+      }]
     }
   });
   peer.on('open', function() {
     $('#my-id').text(peer.id);
-    //  $('#second-video').hide();
+    $('#second-video').hide();
   });
 
   function pingHeroku() {
@@ -212,7 +213,7 @@
 
     $('#end-call').click(function() {
       window.existingCall.close();
-      //      $('#second-video').hide();
+      $('#second-video').hide();
       step2();
     });
 
