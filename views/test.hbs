@@ -19,8 +19,8 @@
   function login(form) {
     var phone = window.phone = PHONE({
       number: form.username.value || "Anonymous", // listen on username line else Anonymous
-      publish_key: 'pub-c-037b5e80-c23a-4c47-90d4-7135712e1e5e',
-      subscribe_key: 'sub-c-936f958a-3581-11e8-9609-8e0b2828cd62',
+      publish_key: 'your_pub_key',
+      subscribe_key: 'your_sub_key',
     });
     phone.ready(function() {
       form.username.style.background = "#55ff5b";
@@ -34,10 +34,11 @@
       });
     });
     return false; // So the form does not submit.
+  }
 
-    function makeCall(form) {
-      if (!window.phone) alert("Login First!");
-      else phone.dial(form.number.value);
-      return false;
-    }
+  function makeCall(form) {
+    if (!window.phone) alert("Login First!");
+    else phone.dial(form.number.value);
+    return false;
+  }
 </script>
